@@ -12,3 +12,5 @@ The Program description are below:
 - Open layout part and design interface.
 - Write program codes and check it with debug process.
 - Check your Database table via SE16N transaction code.
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_database_table_content.JPG?raw=true" align="center" />
+https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_database_table_content.JPG?raw=true
