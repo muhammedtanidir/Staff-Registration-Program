@@ -1,0 +1,200 @@
+ REPORT zide_mt_pkayit.
+ DATA: gv_persid    TYPE vrm_id,
+       gv_ad        TYPE zmt_persad_de,
+       gv_soyad     TYPE zmt_perssoyad_de,
+       gv_cins      TYPE zmt_perscins_de,
+       gv_tc        TYPE zmt_perstc_de,
+       gv_departman TYPE zmt_persde_de,
+       gv_bas       TYPE zmt_persbas_de,
+       gv_dog       TYPE zmt_persdog_de,
+       gv_maas      TYPE zmt_persmaas_de,
+       gv_yas       TYPE zmt_persyas_de,
+       gv_years     TYPE num2,
+       gs_persk_t   TYPE zide_dba_t_perr,
+       gt_persk_t   TYPE TABLE OF zide_dba_t_perr,
+       gv_rad1      TYPE zmt_perscins_de,
+       gv_rad2      TYPE zmt_perscins_de,
+       gv_cbox      TYPE zmt_perscbox_de,
+       gv_id        TYPE vrm_id,
+       gt_values    TYPE vrm_values,
+       gs_values    TYPE vrm_value,
+       ok_code      TYPE sy-ucomm,
+       gt_log       TYPE TABLE OF zide_dba_t_perr,
+       gs_log       TYPE zide_dba_t_perr,
+       gv_text      TYPE char200.
+
+ CONTROLS ts_id TYPE TABSTRIP.
+
+
+
+ gv_cbox = abap_false.
+
+ START-OF-SELECTION.
+   CALL SCREEN 0001.
+
+
+*&---------------------------------------------------------------------*
+*&      Module  STATUS_0001  OUTPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+ MODULE status_0001 OUTPUT.
+   SET PF-STATUS '0001'.
+   SET TITLEBAR 'Personel Kayıt'.
+
+   CLEAR:gt_values, gs_values,gt_values[].
+   gv_id = 'GV_DEPARTMAN'.
+   gs_values-key = '1'.
+   gs_values-text = text-001.
+   APPEND gs_values TO gt_values.CLEAR:gs_values.
+
+   gs_values-key = '2'.
+   gs_values-text = 'Finans'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '3'.
+   gs_values-text = 'Üretim'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '4'.
+   gs_values-text = 'Satınalma'.
+   APPEND gs_values TO gt_values.
+
+
+
+   CALL FUNCTION 'VRM_SET_VALUES'
+   "dropdown için kullanılan function
+     EXPORTING
+       id     = gv_id
+       values = gt_values.
+
+ ENDMODULE.
+
+
+ MODULE cancel INPUT.
+   LEAVE PROGRAM.
+ ENDMODULE.
+
+
+ MODULE user_command_0001 INPUT.
+
+   CASE ok_code.
+
+*    WHEN '&BACK'.
+*       LEAVE TO SCREEN 0.
+**
+     WHEN '&CLEAR'.
+       PERFORM clear_data.
+
+     WHEN '&SAVE'.
+       PERFORM save_data.
+
+     WHEN '&TAB1'.
+       ts_id-activetab = '&TAB1'.
+     WHEN '&TAB2'.
+       ts_id-activetab = '&TAB2'.
+   ENDCASE.
+
+ ENDMODULE.
+*&---------------------------------------------------------------------*
+*&      Form  CLEAR_DATA
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+ FORM clear_data .
+
+   CLEAR: gv_ad,
+          gv_soyad,
+          gv_bas,
+          gv_dog,
+          gv_departman,
+          gv_bas,
+          gv_tc,
+          gv_maas,
+          gv_rad2,
+          gv_cbox.
+   gv_rad1 = abap_true.
+   CONCATENATE sy-ucomm
+         'Temizleme Başarılı.' INTO gv_text SEPARATED BY space.
+   MESSAGE gv_text TYPE 'I' DISPLAY LIKE 'S'.
+
+ ENDFORM.
+*&---------------------------------------------------------------------*
+*&      Form  SAVE_DATA
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+ FORM save_data .
+
+   DATA: lv_dept TYPE c LENGTH 20.
+
+   CLEAR:gs_values,lv_dept.
+
+   CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+     EXPORTING
+       input  = gv_departman
+     IMPORTING
+       output = gv_departman.
+
+
+   READ TABLE gt_values INTO gs_values WITH KEY key = gv_departman.
+   lv_dept = gs_values-text.
+   CONDENSE: lv_dept.
+
+   CLEAR: gs_log.
+   gs_log-pers_ad = gv_ad.
+   gs_log-pers_soyad = gv_soyad.
+   gs_log-pers_d = lv_dept.
+   "?? Departman kısmı sadece son tanımlanan bölüm oluyor. diğerleri seçils
+   "e dahi son kısım dahil oluyor.
+   gs_log-pers_dog = gv_dog.
+
+   CALL FUNCTION 'HRCM_TIME_PERIOD_CALCULATE'
+   "yaş hesaplamak için kullanılan function
+     EXPORTING
+       begda         = gv_dog
+       endda         = sy-datum
+     IMPORTING
+       noyrs         = gv_years
+     EXCEPTIONS
+       invalid_dates = 1
+       overflow      = 2
+       OTHERS        = 3.
+
+   gs_log-pers_yas  = gv_years.
+   .
+
+
+   gs_log-pers_bas = gv_bas.
+   gs_log-pers_cbox = gv_cbox.
+   gs_log-pers_tc = gv_tc.
+   gs_log-pers_maas = gv_maas.
+   IF  gv_rad1 EQ abap_true.
+     gs_log-pers_cins = 'K'.
+   ELSE.
+     gs_log-pers_cins = 'E'.
+   ENDIF.
+   MODIFY zide_dba_t_perr FROM gs_log.
+*   INSERT ZIDE_DBA_T_PERR FROM gs_log.
+
+   IF sy-subrc NE 0.
+     CONCATENATE sy-ucomm
+'Kayıt Başarısız!.' INTO gv_text SEPARATED BY space.
+     MESSAGE gv_text TYPE 'I' DISPLAY LIKE 'E'.
+   ELSE.
+     CONCATENATE sy-ucomm
+'Kayıt Başarılı.' INTO gv_text SEPARATED BY space.
+     MESSAGE gv_text TYPE 'I' DISPLAY LIKE 'S'.
+   ENDIF.
+
+
+*   COMMIT WORK AND WAIT.
+
+
+ ENDFORM.
