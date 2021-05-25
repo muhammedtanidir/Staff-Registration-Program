@@ -1,0 +1,30 @@
+PROGRAM ZIDE_PKYT_R_001 MESSAGE-ID  ZXMT.
+ DATA: gv_persid    TYPE vrm_id,
+       gv_ad        TYPE zmt_persad_de,
+       gv_soyad     TYPE zmt_perssoyad_de,
+       gv_cins      TYPE zmt_perscins_de,
+       gv_tc        TYPE zmt_perstc_de,
+       gv_departman TYPE zmt_persde_de,
+       gv_bas       TYPE zmt_persbas_de,
+       gv_dog       TYPE zmt_persdog_de,
+       gv_maas      TYPE zmt_persmaas_de,
+       gv_yas       TYPE zmt_persyas_de,
+       gv_years     TYPE num2,
+       gs_persk_t   TYPE zide_dba_t_perr,
+       gt_persk_t   TYPE TABLE OF zide_dba_t_perr,
+       gv_rad1      TYPE zmt_perscins_de,
+       gv_rad2      TYPE zmt_perscins_de,
+       gv_cbox      TYPE zmt_perscbox_de,
+       gv_id        TYPE vrm_id,
+       gt_values    TYPE vrm_values,
+       gs_values    TYPE vrm_value,
+       ok_code      TYPE sy-ucomm,
+       gt_log       TYPE TABLE OF zide_dba_t_perr,
+       gs_log       TYPE zide_dba_t_perr,
+
+       gv_tclen     TYPE i,
+       gv_text      TYPE char200.
+
+ DATA: go_salv TYPE REF TO cl_salv_table.
+
+ CONTROLS ts_id TYPE TABSTRIP.
