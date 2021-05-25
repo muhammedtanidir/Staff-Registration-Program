@@ -13,9 +13,4 @@ The Program description are below:
 - Write program codes and check it with debug process.
 - Check your Database table via SE16N transaction code.
 - Secreen Shots are Below:
-<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_program_screen_layout.JPG?raw=true" align="center" />
-<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_program_ss.JPG?raw=true" align="center" />
-<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_program_variables.JPG?raw=true" align="center" />
-<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkayit_database_table_content.JPG?raw=true" align="center" />
-
-
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_program_ss.JPG?raw=true" align="center" />
