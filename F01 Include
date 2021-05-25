@@ -1,0 +1,169 @@
+FORM get_data .
+
+ CLEAR: gv_cbox.
+ gv_cbox = abap_false.
+
+       SHIFT gv_tc LEFT DELETING LEADING '0'.
+       gv_tclen = strlen( gv_tc ) .
+       IF gv_tclen < 11.
+*         MESSAGE 'TCKN Kontrol ediniz' TYPE 'I' DISPLAY LIKE 'E'.
+         MESSAGE i002 DISPLAY LIKE 'E'.
+       ELSE.
+
+         CALL FUNCTION 'HRCM_TIME_PERIOD_CALCULATE'
+           EXPORTING
+             begda         = gv_dog
+             endda         = sy-datum
+           IMPORTING
+             noyrs         = gv_years
+           EXCEPTIONS
+             invalid_dates = 1
+             overflow      = 2
+             OTHERS        = 3.
+         gs_log-pers_yas  = gv_years.
+
+         IF gv_years < 18 OR  gv_years > 99.
+*  MESSAGE 'Personel Yaşını kontrol ediniz' TYPE 'I' DISPLAY LIKE 'E'.
+           MESSAGE i006 DISPLAY LIKE 'E'.
+         ELSE.
+           PERFORM save_data.
+PERFORM display_alv.
+ENDIF.
+ENDIF.
+
+ENDFORM.
+
+ FORM clear_data .
+   CLEAR: gv_ad,
+          gv_soyad,
+          gv_bas,
+          gv_dog,
+          gv_departman,
+          gv_bas,
+          gv_tc,
+          gv_maas,
+          gv_rad2,
+          gv_cbox.
+   gv_rad1 = abap_true.
+*   CONCATENATE sy-ucomm
+*         'Temizleme Başarılı.' INTO gv_text SEPARATED BY space.
+*   MESSAGE gv_text TYPE 'S' DISPLAY LIKE 'S'.
+*CONCATENATE sy-ucomm
+   MESSAGE i000 DISPLAY LIKE 'S'.
+ ENDFORM.
+
+  FORM save_data .
+
+
+   DATA: lv_dept TYPE c LENGTH 20.
+
+   CLEAR:gs_values,lv_dept.
+
+   CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+     EXPORTING
+       input  = gv_departman
+     IMPORTING
+       output = gv_departman.
+
+
+   READ TABLE gt_values INTO gs_values WITH KEY key = gv_departman.
+   lv_dept = gs_values-text.
+   CONDENSE: lv_dept.
+
+   CLEAR: gs_log.
+
+   gs_log-pers_ad = gv_ad.
+   gs_log-pers_soyad = gv_soyad.
+   gs_log-pers_d = lv_dept.
+   gs_log-pers_dog = gv_dog.
+
+   CALL FUNCTION 'HRCM_TIME_PERIOD_CALCULATE'
+     EXPORTING
+       begda         = gv_dog
+       endda         = sy-datum
+     IMPORTING
+       noyrs         = gv_years
+     EXCEPTIONS
+       invalid_dates = 1
+       overflow      = 2
+       OTHERS        = 3.
+   gs_log-pers_yas  = gv_years.
+
+
+   gs_log-pers_bas = gv_bas.
+   gs_log-pers_cbox = gv_cbox.
+   gs_log-pers_tc = gv_tc.
+   gs_log-pers_maas = gv_maas.
+   IF  gv_rad1 EQ abap_true.
+     gs_log-pers_cins = 'K'.
+   ELSE.
+     gs_log-pers_cins = 'E'.
+   ENDIF.
+   MODIFY zide_dba_t_perr FROM gs_log.
+
+   IF sy-subrc NE 0.
+*     CONCATENATE sy-ucomm
+*'Kayıt Başarısız!.' INTO gv_text SEPARATED BY space.
+*     MESSAGE gv_text TYPE 'I' DISPLAY LIKE 'E'.
+     MESSAGE i001 DISPLAY LIKE 'E'.
+   ELSE.
+*     CONCATENATE sy-ucomm
+*'Kayıt Başarılı.' INTO gv_text SEPARATED BY space.
+*     MESSAGE gv_text TYPE 'S' DISPLAY LIKE 'S'.
+     MESSAGE i005 WITH gv_tc gv_ad gv_soyad DISPLAY LIKE 'S'.
+   ENDIF.
+
+
+
+
+ ENDFORM.
+
+*&---------------------------------------------------------------------*
+*&      Form  DISPLAY_ALV
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM display_alv .
+
+
+           SELECT * FROM zide_dba_t_perr INTO TABLE gt_log.
+           cl_salv_table=>factory(
+             IMPORTING
+               r_salv_table   = go_salv
+             CHANGING
+               t_table        = gt_log ).
+
+           DATA: lo_display TYPE REF TO cl_salv_display_settings.
+
+           lo_display = go_salv->get_display_settings( ).
+           lo_display->set_striped_pattern( value = 'X' ).
+
+           DATA: lo_columns TYPE REF TO cl_salv_columns,
+                 lo_column TYPE REF TO cl_salv_column.
+
+
+           lo_columns = go_salv->get_columns( ).
+           lo_columns->set_optimize( 'X' ).
+
+           TRY .
+lo_column = lo_columns->get_column( columnname = 'MANDT' ).
+           lo_column->set_visible(
+               value = IF_SALV_C_BOOL_SAP=>FALSE ).
+
+lo_column = lo_columns->get_column( columnname = 'PERS_CBOX' ).
+           lo_column->set_visible(
+               value = IF_SALV_C_BOOL_SAP=>FALSE ).
+           CATCH cx_salv_not_found.
+
+           ENDTRY.
+
+
+           go_salv->display( ).
+
+*         ENDIF.
+*       ENDIF.
+
+ENDFORM.
