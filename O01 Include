@@ -1,0 +1,63 @@
+MODULE status_0001 OUTPUT.
+   SET PF-STATUS '0001'.
+   SET TITLEBAR 'Personel Kayıt'.
+
+   CLEAR:gt_values, gs_values,gt_values[].
+   gv_id = 'GV_DEPARTMAN'.
+   gs_values-key = '1'.
+   gs_values-text = text-001.
+   APPEND gs_values TO gt_values. CLEAR:gs_values.
+
+   gs_values-key = '2'.
+   gs_values-text = 'Finans'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '3'.
+   gs_values-text = 'Üretim'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '4'.
+   gs_values-text = 'Satınalma'.
+   APPEND gs_values TO gt_values.
+
+
+
+   CALL FUNCTION 'VRM_SET_VALUES'
+     EXPORTING
+       id     = gv_id
+       values = gt_values.
+
+
+
+ ENDMODULE.
+
+  MODULE status_0101 OUTPUT.
+   SET PF-STATUS '0101'.
+*  SET TITLEBAR 'xxx'.
+
+   CLEAR:gt_values, gs_values,gt_values[].
+   gv_id = 'GV_DEPARTMAN'.
+   gs_values-key = '1'.
+   gs_values-text = text-001.
+   APPEND gs_values TO gt_values. CLEAR:gs_values.
+
+   gs_values-key = '2'.
+   gs_values-text = 'Finans'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '3'.
+   gs_values-text = 'Üretim'.
+   APPEND gs_values TO gt_values.
+
+   gs_values-key = '4'.
+   gs_values-text = 'Satınalma'.
+   APPEND gs_values TO gt_values.
+
+
+
+   CALL FUNCTION 'VRM_SET_VALUES'
+     EXPORTING
+       id     = gv_id
+       values = gt_values.
+
+ ENDMODULE.
