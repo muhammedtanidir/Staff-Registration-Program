@@ -14,3 +14,9 @@ The Program description are below:
 - Check your Database table via SE16N transaction code.
 - Secreen Shots are Below:
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_program_ss.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_program_screen_layout.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_flowss.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_mainss.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_screenss.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_tabless.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_display_alv.JPG?raw=true" align="center" />
