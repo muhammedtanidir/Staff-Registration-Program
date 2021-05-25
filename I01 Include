@@ -1,0 +1,20 @@
+ MODULE cancel INPUT.
+   LEAVE PROGRAM.
+ ENDMODULE.
+
+ MODULE user_command_0001 INPUT.
+   ok_code = sy-ucomm.
+ ENDMODULE.
+
+MODULE user_command_0101 INPUT.
+   CASE ok_code.
+     WHEN '&CLEAR'.
+       PERFORM clear_data.
+     WHEN '&SAVE'.
+       PERFORM get_data.
+     WHEN '&TAB1'.
+       ts_id-activetab = '&TAB1'.
+     WHEN '&TAB2'.
+       ts_id-activetab = '&TAB2'.
+   ENDCASE.
+ ENDMODULE.
