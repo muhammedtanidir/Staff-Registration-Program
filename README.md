@@ -18,5 +18,6 @@ The Program description are below:
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_flowss.JPG?raw=true" align="center" />
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_mainss.JPG?raw=true" align="center" />
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_screenss.JPG?raw=true" align="center" />
+<img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_database_table.JPG?raw=true" align="center" />
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_tabless.JPG?raw=true" align="center" />
 <img src="https://github.com/muhammedtanidir/Staff-Registration-Program/blob/main/pkyt_display_alv.JPG?raw=true" align="center" />
