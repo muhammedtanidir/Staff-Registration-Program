@@ -14,7 +14,7 @@ The Program description are below:
 - Open layout part and design interface.
 - Write program codes and check it with debug process.
 - (in that program I used subroutines, alv grids, inclules, screens, gui status and transactions ).
--   *Personel TCKN lenght must be 11 else program shows allert message.
+-   *Personel TCKN lenght must be 11 else program shows Error message.
 -   **Age Must be between 18-99 that's why program gives you allert if you set birth date value more then 100 years old or less than 18 years old .
 - Check your Database table via SE16N transaction code.
 - Secreen Shots are Below:
